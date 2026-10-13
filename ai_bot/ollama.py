@@ -32,6 +32,8 @@ class Ollama:
             'required': ['orders'], 'additionalProperties': False}
         payload = {
             'model': self.model, 'stream': False, 'format': schema,
+            # Only final orders are consumed; keep thinking from using the output budget.
+            'think': False,
             'options': {'temperature': 0, 'num_predict': 1024},
             'messages': [
                 {'role': 'system', 'content': (
