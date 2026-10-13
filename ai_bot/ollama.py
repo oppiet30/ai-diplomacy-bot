@@ -39,7 +39,15 @@ class Ollama:
                 {'role': 'system', 'content': (
                     'You play Classic no-press Diplomacy. Choose a coherent set of orders '
                     'to capture and defend supply centers. Consider support moves and '
-                    'enemy threats. Return JSON with only an orders array. Choose exactly '
+                    'enemy threats. Return JSON with only an orders array. '
+                    'Use supply_centers and powers to identify neutral and enemy centers. '
+                    'Adjacency describes map connections; legal_orders remains authoritative '
+                    'for each unit and coast. Compare baseline_orders with alternatives: '
+                    'the baseline is a legal candidate, not a required answer. Prefer '
+                    'supported attacks, threatened-center defense, or movement toward '
+                    'reachable centers over aimless moves or holding every unit. Holding '
+                    'is appropriate when it protects a center or a move would expose one. '
+                    'Assess likely enemy moves and coordinate your units. Choose exactly '
                     'one order for each unit from its legal_orders list. Do not invent '
                     'units, orders or provinces. No negotiation or player messages.')},
                 {'role': 'user', 'content': json.dumps(position)}]}
