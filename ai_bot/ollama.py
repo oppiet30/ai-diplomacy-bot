@@ -47,8 +47,15 @@ class Ollama:
                     'supported attacks, threatened-center defense, or movement toward '
                     'reachable centers over aimless moves or holding every unit. Holding '
                     'is appropriate when it protects a center or a move would expose one. '
-                    'Assess likely enemy moves and coordinate your units. Choose exactly '
-                    'one order for each unit from its legal_orders list. Do not invent '
+                    'Assess likely enemy moves and coordinate your units. '
+                    'Match supports to your own selected moves or stationary units. Avoid '
+                    'competing moves into one province, direct swaps, and moving into an '
+                    'own unit that stays. Coordinate convoy fleets with the army VIA order '
+                    'and a complete sea route; do not assume foreign fleets will cooperate. '
+                    'Use baseline_coordination_issues to improve the baseline plan. '
+                    'Use previous_turn when present to reconsider unproductive plans; its '
+                    'observations do not prove why a move failed or succeeded. '
+                    'Choose exactly one order for each unit from its legal_orders list. Do not invent '
                     'units, orders or provinces. No negotiation or player messages.')},
                 {'role': 'user', 'content': json.dumps(position)}]}
         request = Request(self.url + '/api/chat', data=json.dumps(payload).encode(),

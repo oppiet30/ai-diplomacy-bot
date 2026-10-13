@@ -14,10 +14,19 @@ existing webDiplomacy API. No hosted AI API or OpenAI billing is required.
 - Dry-run is the default. Only explicit game IDs are processed; ready, finished,
   paused, processing and unsupported positions are skipped by the inherited adapter.
 - Submission rechecks the phase, saves unready, verifies returned orders, then marks ready.
+- Model plans also reject conflicting own moves, blocked friendly destinations, direct
+  swaps, and supports/convoys that contradict the selected own-unit order. These are
+  strategy checks; the engine's legal orders and adjudication rules are unchanged.
+  Rejected plans use the existing validated DumbBot fallback (or fail closed when
+  fallback is disabled). DumbBot's own strategy is unchanged.
+- The CLI remembers confirmed movement submissions in a `.feedback.private.json` file
+  beside the private config. The next movement season receives submitted orders,
+  destination-occupancy observations and center changes. Dry-runs never update it.
+  Delete that file to reset memory. Missing, corrupt or stale feedback is ignored.
 - No trained research weights, datasets or player messages are bundled or sent to Ollama.
 
 Legal orders are not necessarily good strategy. This has not been benchmarked against
-DumbBot or tested on Dell/Ollama. Convoy coordination and negotiation are not supported
+DumbBot or tested on Dell/Ollama. Complete convoy-route validation and negotiation are not supported
 as dedicated planning features. Use a separate test game, not Game 6's working scheduler.
 
 ## Install on Dell (outside Apache's document root)

@@ -1,6 +1,7 @@
 """Model choices must pass independent legality and completeness checks."""
 from cpu_bot.strategy import choose_orders
 from .ollama import ModelError
+from .coordination import coordination_issues, validate_coordination
 
 
 def legal_choices(game, power):
@@ -28,8 +29,19 @@ def validate_orders(orders, choices):
 
 
 class Player:
-    def __init__(self, model, fallback=True, log=print):
+    def __init__(self, model, fallback=True, log=print, feedback=None):
         self.model, self.fallback, self.log = model, fallback, log
+        self.feedback, self.feedback_key = feedback, None
+
+    def begin_turn(self, server, game_id, game, power):
+        self.feedback_key = self.feedback.key(server, game_id, power) if self.feedback else None
+
+    def submitted(self, game, power, orders):
+        if self.feedback and self.feedback_key and game.phase_type == 'M':
+            try:
+                self.feedback.save(self.feedback_key, game, power, orders)
+            except OSError:
+                self.log(f'{power}: orders submitted, but previous-turn feedback could not be saved')
 
     def __call__(self, game, power):
         # Use the tested phase adapter for retreats/builds in this first version.
@@ -49,9 +61,12 @@ class Player:
             'adjacency': {location: sorted(neighbors)
                           for location, neighbors in game.map.loc_abut.items()},
             'baseline_orders': baseline,
+            'baseline_coordination_issues': coordination_issues(baseline),
+            'previous_turn': (self.feedback.previous(self.feedback_key, game, power)
+                              if self.feedback and self.feedback_key else None),
             'legal_orders': choices}
         try:
-            result = validate_orders(self.model.orders(position), choices)
+            result = validate_coordination(validate_orders(self.model.orders(position), choices))
             self.log(f'{power} {position["phase"]}: validated Ollama orders')
             if all(order.endswith(' H') for order in result):
                 self.log(f'{power}: all units holding; review strategic progress')

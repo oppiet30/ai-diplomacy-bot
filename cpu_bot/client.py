@@ -113,6 +113,8 @@ def run(config, submit=False, log=print, client_class=Client, order_selector=Non
                 board = Board(context, client.public_file(context['files']['game']), client.public_file(context['files']['variant']))
                 country = context['member']['countryID']
                 power = board.countries[country]
+                if hasattr(order_selector, 'begin_turn'):
+                    order_selector.begin_turn(config['api_url'], game_id, board.game, power)
                 random.seed(int.from_bytes(hashlib.sha256(f'{game_id}:{country}:{game["turn"]}:{game["phase"]}'.encode()).digest(), 'big'))
                 orders = order_selector(board.game, power)
                 # webDiplomacy caps builds at the number of free home centers.
@@ -138,6 +140,8 @@ def run(config, submit=False, log=print, client_class=Client, order_selector=Non
                         if not {'Ready', 'Completed'}.issubset(status):
                             raise ValueError('Server did not confirm complete, ready orders')
                     log(f'{label} game {game_id}: submitted {orders}')
+                    if hasattr(order_selector, 'submitted'):
+                        order_selector.submitted(board.game, power, orders)
                 else:
                     log(f'{label} game {game_id}: dry run {json.dumps(payload)}')
             except (ValueError, KeyError, TypeError, OSError) as error:
