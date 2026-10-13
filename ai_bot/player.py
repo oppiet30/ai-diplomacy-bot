@@ -39,18 +39,25 @@ class Player:
         choices = legal_choices(game, power)
         if not choices:
             return []
+        baseline = validate_orders(choose_orders(game, power), choices)
         position = {
             'power': power, 'phase': game.get_current_phase(),
             'powers': {name: {'units': game.get_units(name),
                               'centers': list(state.centers)}
                        for name, state in game.powers.items()},
+            'supply_centers': sorted(game.map.scs),
+            'adjacency': {location: sorted(neighbors)
+                          for location, neighbors in game.map.loc_abut.items()},
+            'baseline_orders': baseline,
             'legal_orders': choices}
         try:
             result = validate_orders(self.model.orders(position), choices)
             self.log(f'{power} {position["phase"]}: validated Ollama orders')
+            if all(order.endswith(' H') for order in result):
+                self.log(f'{power}: all units holding; review strategic progress')
             return result
         except ModelError as error:
             if not self.fallback:
                 raise ModelError('Model failed validation; no orders submitted') from None
             self.log(f'{power} {position["phase"]}: model unavailable/invalid; using DumbBot')
-            return validate_orders(choose_orders(game, power), choices)
+            return baseline
