@@ -84,28 +84,110 @@ Support can target another country's unit. It helps only if the supported
 unit's actual order matches the support and the support survives adjudication.
 Legal orders can still be strategically poor or fail.
 
-## Common territory abbreviations
+## All 75 standard-map territories
 
-| Code | Territory |
+The standard map has **56 land provinces and 19 sea spaces**. Coastal provinces
+are land provinces that fleets can also occupy. This list is a code reference;
+it does not mean a unit can move directly to every territory.
+
+Armies move between adjacent land provinces or reach coastal provinces by convoy.
+Fleets move between connected sea spaces and coastal provinces along fleet-valid
+connections. Inland provinces are available only to armies.
+
+| Code | Territory | Type |
+| --- | --- | --- |
+| `ADR` | Adriatic Sea | Sea |
+| `AEG` | Aegean Sea | Sea |
+| `ALB` | Albania | Coastal |
+| `ANK` | Ankara | Coastal |
+| `APU` | Apulia | Coastal |
+| `ARM` | Armenia | Coastal |
+| `BAL` | Baltic Sea | Sea |
+| `BAR` | Barents Sea | Sea |
+| `BEL` | Belgium | Coastal |
+| `BER` | Berlin | Coastal |
+| `BLA` | Black Sea | Sea |
+| `BOH` | Bohemia | Inland |
+| `BOT` | Gulf of Bothnia | Sea |
+| `BRE` | Brest | Coastal |
+| `BUD` | Budapest | Inland |
+| `BUL` | Bulgaria | Coastal |
+| `BUR` | Burgundy | Inland |
+| `CLY` | Clyde | Coastal |
+| `CON` | Constantinople | Coastal |
+| `DEN` | Denmark | Coastal |
+| `EAS` | Eastern Mediterranean | Sea |
+| `EDI` | Edinburgh | Coastal |
+| `ENG` | English Channel | Sea |
+| `FIN` | Finland | Coastal |
+| `GAL` | Galicia | Inland |
+| `GAS` | Gascony | Coastal |
+| `GRE` | Greece | Coastal |
+| `HEL` | Helgoland Bight | Sea |
+| `HOL` | Holland | Coastal |
+| `ION` | Ionian Sea | Sea |
+| `IRI` | Irish Sea | Sea |
+| `KIE` | Kiel | Coastal |
+| `LON` | London | Coastal |
+| `LVN` | Livonia | Coastal |
+| `LVP` | Liverpool | Coastal |
+| `LYO` | Gulf of Lyon | Sea |
+| `MAO` | Mid-Atlantic Ocean | Sea |
+| `MAR` | Marseilles | Coastal |
+| `MOS` | Moscow | Inland |
+| `MUN` | Munich | Inland |
+| `NAF` | North Africa | Coastal |
+| `NAO` | North Atlantic Ocean | Sea |
+| `NAP` | Naples | Coastal |
+| `NTH` | North Sea | Sea |
+| `NWG` | Norwegian Sea | Sea |
+| `NWY` | Norway | Coastal |
+| `PAR` | Paris | Inland |
+| `PIC` | Picardy | Coastal |
+| `PIE` | Piedmont | Coastal |
+| `POR` | Portugal | Coastal |
+| `PRU` | Prussia | Coastal |
+| `ROM` | Rome | Coastal |
+| `RUH` | Ruhr | Inland |
+| `RUM` | Rumania | Coastal |
+| `SER` | Serbia | Inland |
+| `SEV` | Sevastopol | Coastal |
+| `SIL` | Silesia | Inland |
+| `SKA` | Skagerrak | Sea |
+| `SMY` | Smyrna | Coastal |
+| `SPA` | Spain | Coastal |
+| `STP` | St Petersburg | Coastal |
+| `SWE` | Sweden | Coastal |
+| `SYR` | Syria | Coastal |
+| `TRI` | Trieste | Coastal |
+| `TUN` | Tunis | Coastal |
+| `TUS` | Tuscany | Coastal |
+| `TYR` | Tyrolia | Inland |
+| `TYS` | Tyrrhenian Sea | Sea |
+| `UKR` | Ukraine | Inland |
+| `VEN` | Venice | Coastal |
+| `VIE` | Vienna | Inland |
+| `WAL` | Wales | Coastal |
+| `WAR` | Warsaw | Inland |
+| `WES` | Western Mediterranean | Sea |
+| `YOR` | Yorkshire | Coastal |
+
+### Provinces with separate coasts
+
+Coast suffixes identify a fleet's coast; they do not add extra provinces to the
+75-territory total. Armies use the province code without a coast suffix.
+
+| Province | Fleet coast codes |
 | --- | --- |
-| `BEL` | Belgium |
-| `BER` | Berlin |
-| `DEN` | Denmark |
-| `EDI` | Edinburgh |
-| `ENG` | English Channel |
-| `HEL` | Heligoland Bight |
-| `HOL` | Holland |
-| `KIE` | Kiel |
-| `LON` | London |
-| `LVP` | Liverpool |
-| `MUN` | Munich |
-| `NTH` | North Sea |
-| `NWG` | Norwegian Sea |
-| `NWY` | Norway |
-| `SKA` | Skagerrak |
-| `SWE` | Sweden |
-| `WAL` | Wales |
-| `BUL` | Bulgaria |
+| Bulgaria | `BUL/EC` (east), `BUL/SC` (south) |
+| Spain | `SPA/NC` (north), `SPA/SC` (south) |
+| St Petersburg | `STP/NC` (north), `STP/SC` (south) |
+
+Switzerland (`SWI`) is impassable and is not included in the 75 playable
+territories. Rumania is also commonly spelled Romania; Helgoland Bight is also
+called Heligoland Bight.
+
+Codes and terrain types follow the [Diplomacy engine's standard map](https://github.com/diplomacy/diplomacy/blob/master/diplomacy/maps/standard.map).
 
 ## Status messages
 
