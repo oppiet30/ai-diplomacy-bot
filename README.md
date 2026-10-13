@@ -25,11 +25,12 @@ as dedicated planning features. Use a separate test game, not Game 6's working s
 ```bash
 git clone https://github.com/oppiet30/ai-diplomacy-bot.git
 cd ai-diplomacy-bot
-python3.12 -m venv .venv
+python3.14 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Python 3.11/3.12 are tested. Do not install the original diplomacy-research training stack.
+Python 3.11, 3.12 and 3.14 are tested. If using 3.11 or 3.12, substitute that interpreter
+in the virtual-environment command above. Do not install the original diplomacy-research training stack.
 
 ## Private configuration
 
@@ -66,7 +67,7 @@ on a CPU, so benchmark before scheduling. The server's gamemaster still advances
 .venv/bin/python -m unittest discover -s tests/ai -v
 ```
 
-GitHub-hosted runners test Python 3.11 and 3.12 on pushes, PRs and manual dispatch.
+GitHub-hosted runners test Python 3.11, 3.12 and 3.14 on pushes, PRs and manual dispatch.
 All tests are isolated: mocked Ollama, engine fixtures, and a local HTTP test server.
 They never access real accounts, Dell or the OptiPlex. No self-hosted runner is needed.
 
