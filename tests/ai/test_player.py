@@ -30,8 +30,26 @@ class PlayerTests(unittest.TestCase):
         model.orders.return_value = self.holds
         self.assertEqual(Player(model, log=lambda _: None)(self.game, 'FRANCE'), self.holds)
         position = model.orders.call_args.args[0]
-        self.assertEqual(set(position), {'power', 'phase', 'powers', 'legal_orders'})
+        self.assertEqual(set(position), {'power', 'phase', 'powers', 'legal_orders',
+                                       'supply_centers', 'adjacency', 'baseline_orders'})
         self.assertEqual(position['legal_orders'], self.choices)
+        # Neutral centers were absent from the original prompt's owned-center lists.
+        owned = {center for state in position['powers'].values() for center in state['centers']}
+        self.assertNotIn('BEL', owned)
+        self.assertIn('BEL', position['supply_centers'])
+        self.assertIn('BEL', position['adjacency']['PIC'])
+        validate_orders(position['baseline_orders'], self.choices)
+
+    def test_model_can_improve_on_baseline_or_hold_for_defense(self):
+        model = Mock()
+        alternative = ['A PAR - BUR', 'A MAR - SPA', 'F BRE - MAO']
+        with patch('ai_bot.player.choose_orders', return_value=self.holds):
+            model.orders.return_value = alternative
+            self.assertEqual(Player(model, log=lambda _: None)(self.game, 'FRANCE'), alternative)
+        model.orders.return_value = self.holds
+        messages = []
+        self.assertEqual(Player(model, log=messages.append)(self.game, 'FRANCE'), self.holds)
+        self.assertTrue(any('all units holding' in line for line in messages))
 
     def test_invalid_model_uses_validated_fallback(self):
         model = Mock()
@@ -72,6 +90,7 @@ class OllamaTests(unittest.TestCase):
         request = model.opener.open.call_args.args[0]
         body = json.loads(request.data)
         self.assertFalse(body['stream'])
+        self.assertFalse(body['think'])
         self.assertEqual(body['format']['type'], 'object')
         self.assertNotIn('Authorization', request.headers)
         self.assertEqual(model.opener.open.call_args.kwargs['timeout'], 10)
