@@ -31,7 +31,8 @@ class PlayerTests(unittest.TestCase):
         self.assertEqual(Player(model, log=lambda _: None)(self.game, 'FRANCE'), self.holds)
         position = model.orders.call_args.args[0]
         self.assertEqual(set(position), {'power', 'phase', 'powers', 'legal_orders',
-                                       'supply_centers', 'adjacency', 'baseline_orders'})
+                                       'supply_centers', 'adjacency', 'baseline_orders',
+                                       'baseline_coordination_issues', 'previous_turn'})
         self.assertEqual(position['legal_orders'], self.choices)
         # Neutral centers were absent from the original prompt's owned-center lists.
         owned = {center for state in position['powers'].values() for center in state['centers']}

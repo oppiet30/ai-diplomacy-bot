@@ -2,6 +2,7 @@
 import unittest
 from unittest.mock import Mock
 from ai_bot.player import Player, legal_choices, validate_orders
+from ai_bot.ollama import ModelError
 from compare_engines import prepare
 from scenarios import CASES
 
@@ -21,8 +22,10 @@ class ScenarioTests(unittest.TestCase):
         game = prepare(orders)
         model = Mock()
         model.orders.return_value = orders['ENGLAND']
-        self.assertEqual(Player(model, fallback=False, log=lambda _: None)(game, 'ENGLAND'),
-                         orders['ENGLAND'])
+        # The game still permits a self-bounce; the model's planning policy avoids it.
+        validate_orders(orders['ENGLAND'], legal_choices(game, 'ENGLAND'))
+        with self.assertRaises(ModelError):
+            Player(model, fallback=False, log=lambda _: None)(game, 'ENGLAND')
         game.set_orders('ENGLAND', orders['ENGLAND'])
         game.process()
         self.assertEqual(set(game.get_units('ENGLAND')), {'F HEL', 'F DEN'})

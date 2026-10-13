@@ -124,15 +124,26 @@ class BotTests(unittest.TestCase):
                 if payload['ready']=='Yes':ready.append(True)
                 return payload['orders']
         config=dict(api_url=Fake.url,api_keys=dict(bot1='a'*64),game_ids=[5])
-        self.assertEqual(run(config,log=lambda _:None,client_class=Fake),0)
+        class Selector:
+            def __init__(self): self.confirmed = []; self.scopes = []
+            def __call__(self, game, power): return choose_orders(game, power)
+            def begin_turn(self, server, game_id, game, power):
+                self.scopes.append((server, game_id, power))
+            def submitted(self, game, power, orders): self.confirmed.append(orders)
+        selector = Selector()
+        self.assertEqual(run(config,log=lambda _:None,client_class=Fake,order_selector=selector),0)
         self.assertFalse(posts)
-        self.assertEqual(run(config,submit=True,log=lambda _:None,client_class=Fake),0)
+        self.assertFalse(selector.confirmed)
+        self.assertEqual(selector.scopes, [(Fake.url, 5, 'FRANCE')])
+        self.assertEqual(run(config,submit=True,log=lambda _:None,client_class=Fake,order_selector=selector),0)
         self.assertEqual([p['ready'] for p in posts],['No','Yes'])
+        self.assertEqual(len(selector.confirmed), 1)
         posts.clear();ready.clear()
         class Invalid(Fake):
             def request(self,url,private,payload):posts.append(payload);return []
-        self.assertEqual(run(config,submit=True,log=lambda _:None,client_class=Invalid),1)
+        self.assertEqual(run(config,submit=True,log=lambda _:None,client_class=Invalid,order_selector=selector),1)
         self.assertEqual([p['ready'] for p in posts],['No'])
+        self.assertEqual(len(selector.confirmed), 1)
 
     def test_order_response_normalization(self):
         row=dict(type='Build Fleet',terrID=78,toTerrID=78,fromTerrID=None,viaConvoy='No')

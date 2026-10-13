@@ -1,9 +1,11 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 from cpu_bot.client import run, validate_config
 from .ollama import Ollama
 from .player import Player
+from .feedback import Feedback
 
 
 def main():
@@ -18,7 +20,9 @@ def main():
         fallback = config.get('fallback_to_dumbbot', True)
         if type(fallback) is not bool:
             raise ValueError('fallback_to_dumbbot must be boolean')
-        player = Player(Ollama(config.get('ollama', {})), fallback=fallback)
+        # Keep feedback next to private configuration, outside the repository.
+        feedback = Feedback(Path(args.config).resolve().with_suffix('.feedback.private.json'))
+        player = Player(Ollama(config.get('ollama', {})), fallback=fallback, feedback=feedback)
         return run(config, args.submit, order_selector=player)
     except (OSError, ValueError, TypeError, AttributeError):
         # Config parser exceptions can contain configuration fragments; do not log them.
