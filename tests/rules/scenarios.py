@@ -1,0 +1,22 @@
+"""Legal movement positions shared by the Python/PHP comparison."""
+CASES = [
+    ('kiel_self_bounce', {'ENGLAND': ['F HEL - KIE', 'F DEN - KIE']}),
+    ('kiel_supported_attack', {'ENGLAND': ['F HEL S F DEN - KIE', 'F DEN - KIE'],
+                               'GERMANY': ['F KIE H']}),
+    ('kiel_supported_defense', {'ENGLAND': ['F HEL S F DEN - KIE', 'F DEN - KIE'],
+                                'GERMANY': ['F KIE H', 'F BER S F KIE']}),
+    ('mismatched_friendly_support', {'ENGLAND': ['F HEL S F DEN - KIE', 'F DEN H']}),
+    ('competing_foreign_support', {'ENGLAND': ['F HEL S A MUN - KIE', 'F DEN S A RUH - KIE'],
+                                   'FRANCE': ['A MUN - KIE', 'A RUH - KIE']}),
+    ('support_cut', {'FRANCE': ['A PAR - BUR', 'A MAR S A PAR - BUR'],
+                     'GERMANY': ['A BUR H'], 'ITALY': ['A PIE - MAR']}),
+    ('support_cut_exception', {'FRANCE': ['A PAR - BUR', 'A MAR S A PAR - BUR'],
+                               'GERMANY': ['A BUR - MAR']}),
+    ('head_to_head', {'FRANCE': ['A PAR - BUR'], 'GERMANY': ['A BUR - PAR']}),
+    ('rotation', {'FRANCE': ['A PAR - BUR', 'A BUR - GAS', 'A GAS - PAR']}),
+    ('no_self_dislodgement', {'FRANCE': ['A PAR - BUR', 'A MAR S A PAR - BUR', 'A BUR H']}),
+    ('simple_convoy', {'ENGLAND': ['A LON - BEL VIA', 'F NTH C A LON - BEL']}),
+    ('disrupted_convoy', {'ENGLAND': ['A LON - BEL VIA', 'F NTH C A LON - BEL'],
+                          'GERMANY': ['F DEN - NTH', 'F HEL S F DEN - NTH']}),
+    ('separate_coast_move', {'FRANCE': ['F MAO - SPA/NC']}),
+]

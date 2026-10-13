@@ -1,0 +1,37 @@
+name: Adjudicator compatibility
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: isolated-test-root
+          MARIADB_DATABASE: adjudicator_compat_test
+          MARIADB_USER: adjudicator_test
+          MARIADB_PASSWORD: local-test-only
+        ports: ['3307:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: oppiet30/webDiplomacy
+          ref: bcb0c5edec9b5667d8317fff9c41d1f9e44d1920
+          path: webdip-reference
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - run: sudo apt-get update && sudo apt-get install -y php-cli php-mysql
+      - run: php -l tests/rules/php_adjudicate.php
+      - run: python -m unittest discover -s tests/rules -v
+      - run: python tests/rules/compare_engines.py --webdip webdip-reference
