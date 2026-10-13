@@ -1,0 +1,11 @@
+{
+  "api_url": "http://webdip.local/api.php",
+  "api_keys": {"test-bot": "REPLACE_WITH_64_CHARACTER_API_KEY"},
+  "game_ids": [],
+  "ollama": {
+    "url": "http://127.0.0.1:11434",
+    "model": "REPLACE_WITH_INSTALLED_MODEL_NAME",
+    "timeout_seconds": 120
+  },
+  "fallback_to_dumbbot": true
+}

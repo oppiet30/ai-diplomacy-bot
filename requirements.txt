@@ -1,0 +1,2 @@
+# CPU strategy and board engine only; no neural training dependencies.
+diplomacy==1.1.2

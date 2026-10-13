@@ -1,0 +1,1 @@
+"""Local Ollama Diplomacy player."""

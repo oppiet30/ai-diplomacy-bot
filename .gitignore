@@ -1,4 +1,11 @@
 # Byte-compiled / optimized / DLL files
+# Private bot configuration must not be committed.
+config*.json
+!config.example.json
+*.private.json
+.env
+.env.*
+
 __pycache__/
 *.py[codz]
 *$py.class
