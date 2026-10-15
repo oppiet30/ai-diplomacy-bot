@@ -67,6 +67,28 @@ class PlayerTests(unittest.TestCase):
         with self.assertRaises(ModelError):
             Player(model, fallback=False)(self.game, 'FRANCE')
 
+    def test_validation_reason_logged_with_fallback(self):
+        model = Mock()
+        model.orders.return_value = ['invented']
+        messages = []
+        with patch('ai_bot.player.choose_orders', return_value=self.holds):
+            result = Player(model, log=messages.append)(self.game, 'FRANCE')
+        self.assertEqual(result, self.holds)
+        self.assertTrue(any('Model must supply exactly one order per unit' in line
+                            and 'using validated DumbBot fallback' in line
+                            for line in messages))
+
+    def test_validation_reason_logged_when_fallback_disabled(self):
+        model = Mock()
+        model.orders.return_value = ['invented']
+        messages = []
+        with patch('ai_bot.player.choose_orders', return_value=self.holds):
+            with self.assertRaisesRegex(ModelError, 'no orders submitted'):
+                Player(model, fallback=False, log=messages.append)(self.game, 'FRANCE')
+        self.assertTrue(any('Model must supply exactly one order per unit' in line
+                            and 'fallback disabled' in line
+                            for line in messages))
+
     def test_builds_use_baseline_without_model_call(self):
         self.game.set_current_phase('W1901A')
         model = Mock()
