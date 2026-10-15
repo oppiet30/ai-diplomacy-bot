@@ -73,6 +73,7 @@ class Player:
             return result
         except ModelError as error:
             if not self.fallback:
+                self.log(f'{power} {position["phase"]}: model rejected ({error}); fallback disabled; no orders submitted')
                 raise ModelError('Model failed validation; no orders submitted') from None
-            self.log(f'{power} {position["phase"]}: model unavailable/invalid; using DumbBot')
+            self.log(f'{power} {position["phase"]}: model rejected ({error}); using validated DumbBot fallback')
             return baseline
