@@ -69,6 +69,28 @@ order writes. Use the existing DumbBot separately; do not run two schedulers for
 same account/game. Multiple sequential model calls may take more than five minutes
 on a CPU, so benchmark before scheduling. The server's gamemaster still advances turns.
 
+## Diagnosing rejected Ollama orders
+
+The bot logs the specific `ModelError` category (such as missing orders,
+illegal orders, coordination conflicts, or Ollama timeout) with the game power
+and phase. It does **not** log raw model output, API keys, or configuration
+secrets.
+
+`fallback_to_dumbbot` defaults to `true`. When enabled, a rejected movement
+plan uses the independently validated DumbBot orders. When set to `false`,
+the bot logs the reason and submits **no** orders; this preserves the
+intentional fail-closed setting. To enable fallback, edit the **private**
+configuration file outside the repository:
+
+```json
+"fallback_to_dumbbot": true
+```
+
+Do not run a second scheduler for the same game. Test with a separate game
+and a dry-run before enabling live submission. If a live game repeatedly
+reports `Model failed validation; no orders submitted`, inspect its private
+`fallback_to_dumbbot` setting and the new validation reason in the logs.
+
 ## Tests and GitHub runners
 
 ```bash
